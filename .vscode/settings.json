@@ -1,0 +1,70 @@
+{
+    "editor.fontFamily": "'Monaspace Neon', monospace",
+    "editor.inlayHints.fontFamily": "'Monaspace Krytpon', monospace",
+    "editor.lineHeight": 1.35,
+    //"editor.fontWeight": "400",
+    "vscode_custom_css.imports": [
+        "file:///C:/Users/mcgra/bevy_training/my_bevy_game/.vscode/vs-code-styles.css"
+    ],
+    "vscode_custom_css.policy": true,
+    "editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09', 'ss10', 'liga'",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.semanticTokenColorCustomizations": {
+        "[Monokai Pro*]": {
+            "enabled": true,
+            "rules": {
+                "parameter": {
+                    "foreground": "#fbc79a", // ffb270
+                    "fontStyle": ""
+                },
+                "*.mutable": {
+                    "fontStyle": "italic bold" // Italic bold triggers neon css effect
+                },
+                "variable.mutable": {
+                    "fontStyle": "italic bold"
+                },
+                "variable": {
+                    "foreground": "#f2fffc",
+                    "fontStyle": ""
+                },
+                "property": {
+                    "fontStyle": ""
+                },
+                "macro": {
+                    "foreground": "#a2e57b"
+                },
+                "keyword": {
+                    "foreground": "#FF6D7E",
+                    "fontStyle": "italic"
+                },
+                "const": {
+                    "foreground": "#baa0f8"
+                },
+                "derive": {
+                    "foreground": "#73afc1"
+                },
+                "interface": {
+                    "foreground": "#7cd5f1",
+                    "fontStyle": "underline"
+                },
+                "selfKeyword": {
+                    "foreground": "#B8C4C3"
+                },
+                "selfTypeKeyword": {
+                    "foreground": "#B8C4C3"
+                },
+            },
+        }
+    },
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "comment",
+                "settings": {
+                    "fontStyle": "italic",
+                    "fontFamily": "'Monaspace Radon'"
+                }
+            }
+        ]
+    }
+}

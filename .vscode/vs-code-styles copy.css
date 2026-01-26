@@ -1,0 +1,113 @@
+.mtk3 {
+    font-family: 'Monaspace Radon';
+    font-size: 1.0em;
+    font-style: normal;
+    color: #6B7678 !important;
+}
+
+.comment {
+    font-family: 'Monaspace Radon';
+    font-style: italic;
+    font-size: 1.0em;
+    color: #6B7678 !important;
+}
+
+.comment:not(.punctuation) {
+    font-family: 'Monaspace Radon';
+    font-size: 1.0em;
+    color: #6B7678 !important;
+}
+
+@property --pulse-percent {
+
+    syntax: '<percentage>';
+
+    inherits: false;
+
+    initial-value: 0%;
+
+}
+
+
+
+@keyframes pulse-separation {
+
+
+
+    0% {
+
+        --pulse-percent: 10%;
+
+        /* little glow at the start */
+
+        text-shadow: 0 0 0 currentColor;
+
+    }
+
+
+
+    33% {
+
+        --pulse-percent: 72%;
+
+        /* The Shadow uses 'currentColor'.
+
+       Since we never changed the actual 'color' property,
+
+       this resolves to the original syntax color (e.g., Cyan).
+
+    */
+
+        text-shadow: 0 0 3px currentColor, 0 0 5px currentColor;
+
+    }
+
+
+
+    100% {
+
+        --pulse-percent: 10%;
+
+        /* little glow at the start */
+
+        text-shadow: 0 0 0 currentColor;
+
+    }
+
+
+
+
+
+}
+
+
+
+.monaco-editor .mtki.mtkb {
+
+    /* CRITICAL:
+
+     Do NOT set the 'color' property. Leave it as the original syntax color.
+
+     Instead, override strictly the "painted" pixels of the text characters.
+
+  */
+
+    -webkit-text-fill-color: color-mix(in srgb, currentColor, white var(--pulse-percent));
+    text-shadow: 0 0 1px color-mix(in srgb, currentColor, white var(--pulse-percent));
+    /* Standard animation settings */
+
+    animation: pulse-separation 2.9s ease-in infinite;
+
+
+
+    font-weight: normal;
+
+    font-style: italic;
+
+
+
+    /* Performance optimization */
+
+    will-change: -webkit-text-fill-color, text-shadow;
+
+}
