@@ -26,6 +26,7 @@ pub mod internal {
     pub const MAX_SPATIAL_FX: usize = 3;
     pub const MAX_COLOR_FX: usize = 3;
     pub const MAX_VFX_ENTITIES: usize = 500;
+    pub use crate::broadcast_material::*;
 }
 
 // TODO: re-export user stuff here

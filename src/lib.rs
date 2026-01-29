@@ -1,3 +1,4 @@
+pub mod broadcast_material;
 pub mod camera;
 mod preludes;
 pub mod render;

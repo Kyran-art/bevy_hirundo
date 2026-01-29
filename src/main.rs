@@ -1,4 +1,4 @@
-use bevy::{log::*, prelude::*};
+use bevy::{log::*, prelude::*, ui::update};
 use my_bevy_game::{
     camera::{control_2d_camera, spawn_camera},
     internal_prelude::*,
@@ -10,10 +10,55 @@ fn main() {
     app.add_plugins((
         DefaultPlugins.set(ImagePlugin::default_nearest()),
         VfxPlugin::default(),
+        Material2dPlugin::<VfxBroadcastMaterial>::default(),
     ));
-    app.add_systems(Startup, (spawn_vfx_entities, spawn_camera));
-    app.add_systems(Update, (control_2d_camera, play_fx));
+    app.add_systems(PreStartup, setup_broadcast_material);
+    app.add_systems(Startup, (spawn_broadcast_entities, spawn_camera));
+    app.add_systems(
+        Update,
+        (
+            control_2d_camera,
+            control_broadcast_fx,
+            update_broadcast_effect_stack,
+        ),
+    );
     app.run();
+}
+
+fn spawn_broadcast_entities(
+    mut commands: Commands,
+    mesh_handle: Res<VfxMeshHandle>,
+    broadcast_mat_handle: Res<VfxBroadcastMaterialHandle>,
+) {
+    const COUNT: usize = 20_000;
+    info!("Spawning {COUNT} broadcast VFX entities...");
+    const SPACING: f32 = 50.0;
+
+    // Grid dims (near-square) calculation
+    let cols: usize = (COUNT as f32).sqrt().ceil() as usize;
+    let rows: usize = (COUNT + cols - 1) / cols;
+
+    let total_w = (cols as f32 - 1.0) * SPACING;
+    let total_h = (rows as f32 - 1.0) * SPACING;
+    let start_x = -total_w * 0.5;
+    let start_y = -total_h * 0.5;
+
+    let random_sprite_index = rand::rng().random_range(0..625);
+
+    for i in 0..COUNT {
+        let col = i % cols;
+        let row = i / cols;
+
+        let x = start_x + (col as f32) * SPACING;
+        let y = start_y + (row as f32) * SPACING;
+        commands.spawn((
+            Mesh2d(mesh_handle.0.clone()),
+            MeshMaterial2d(broadcast_mat_handle.0.clone()), // Shared material!
+            Transform::from_xyz(x, y, 0.0),
+            VfxBroadcast,
+            Visibility::default(),
+        ));
+    }
 }
 
 fn spawn_vfx_entities(mut commands: Commands) {
