@@ -146,15 +146,17 @@ pub fn control_broadcast_fx(
                 .build(),
         );
     } else if input.just_pressed(KeyCode::KeyY) {
-        info!("Y - Adding offset shake to ALL entities");
-        let offsets: [f32; 3] = [1.0, 3.0, 5.0];
-        let offset = *offsets.choose(&mut rand::rng()).unwrap();
+        info!("Y - Adding wobble to ALL entities");
+        let skews: [f32; 3] = [0.3, 0.6, 1.0];
+        let skew = *skews.choose(&mut rand::rng()).unwrap();
 
         material.effect_stack.push(
             EffectBuilder::one_shot(time.elapsed_secs(), 1.0)
-                .offset_x(offset)
-                .with(Wave::triangle(1.0, offset, 0.0))
+                .skew_x(skew)
+                .with(Wave::triangle(3.0, skew, 0.0))
+                .with(AmplitudeEnvelope::new(0.1, 0.0, 0.9).with_ease_out(4.0))
                 .with(WavePhase::center())
+                .with(Anchor::BottomCenter)
                 .build(),
         );
     } else if input.just_pressed(KeyCode::KeyC) {
