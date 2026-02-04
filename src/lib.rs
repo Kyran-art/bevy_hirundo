@@ -1,9 +1,13 @@
-pub mod broadcast_material;
-pub mod camera;
-mod preludes;
-pub mod render;
+// New module structure
+pub mod components;
+pub mod resources;
+pub mod materials;
+pub mod effects;
 pub mod systems;
-pub mod vfx;
+pub mod input;
+pub mod spawners;
+pub mod hooks;
+mod preludes;
 
 pub use crate::preludes::internal as internal_prelude;
 pub use crate::preludes::user as prelude;

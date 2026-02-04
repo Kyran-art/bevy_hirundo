@@ -1,11 +1,4 @@
-use crate::{VfxPlugin, internal_prelude::*};
-
-/// System to sync user-facing Vfx component to internal SpriteIndex component
-pub fn sync_vfx_to_internal(mut query: Query<(&Vfx, &mut SpriteIndex), Changed<Vfx>>) {
-    for (vfx, mut internal_sprite) in &mut query {
-        internal_sprite.0 = vfx.sprite_index;
-    }
-}
+use crate::internal_prelude::*;
 
 /// System to update the storage buffer when effect stacks or sprite indices change
 pub fn update_effect_storage_buffer(
@@ -49,43 +42,4 @@ pub fn update_effect_storage_buffer(
             }
         }
     }
-}
-
-/// System to prune expired effects (optional - keeps effect stacks clean)
-pub fn prune_expired_effects(time: Res<Time>, mut query: Query<&mut Vfx>) {
-    let now = time.elapsed_secs();
-    for mut vfx in &mut query {
-        vfx.effects.expire(now);
-    }
-}
-
-pub fn setup_vfx_assets(
-    plugin_config: Res<VfxPlugin>,
-    asset_server: Res<AssetServer>,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<VfxMaterial>>,
-    mut buffers: ResMut<Assets<ShaderStorageBuffer>>,
-    mut mesh_handle_res: ResMut<VfxMeshHandle>,
-    mut mat_handle_res: ResMut<VfxMaterialHandle>,
-) {
-    // 1. Create Mesh
-    let mesh_handle = meshes.add(RectangleMeshBuilder::new(
-        plugin_config.atlas_dimensions.sprite_size.x,
-        plugin_config.atlas_dimensions.sprite_size.y,
-    ));
-    mesh_handle_res.0 = mesh_handle;
-
-    // 2. Create Storage Buffer
-    let buffer_handle = buffers.add(ShaderStorageBuffer::from(vec![
-        EffectStack::default();
-        MAX_VFX_ENTITIES
-    ]));
-
-    // 3. Create Material
-    let material_handle = materials.add(VfxMaterial {
-        texture: asset_server.load(&plugin_config.texture_path),
-        effect_storage: buffer_handle,
-        atlas_dimensions: plugin_config.atlas_dimensions.clone(),
-    });
-    mat_handle_res.0 = material_handle;
 }

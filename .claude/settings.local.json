@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(cargo build:*)",
+      "Bash(timeout 5 cargo run:*)",
+      "Bash(cargo check:*)"
+    ]
+  }
+}
