@@ -23,6 +23,15 @@ pub fn play_fx(
                 .build();
             vfx.push_effect(pulse_effect);
         }
+    } else if input.just_pressed(KeyCode::KeyV) {
+        info!("KeyV - Applying random alpha square effect to all Vfx entities.");
+        for mut vfx in &mut query {
+            let pulse_effect = EffectBuilder::one_shot(time.elapsed_secs(), 1.0)
+                .alpha(0.0)
+                .with(Wave::square(7.0, 0.5, 0.5))
+                .build();
+            vfx.push_effect(pulse_effect);
+        }
     } else if input.just_pressed(KeyCode::KeyO) {
         let mut rng = rand::rng();
         for mut vfx in &mut query {

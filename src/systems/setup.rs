@@ -1,8 +1,8 @@
+use crate::HirundoPlugin;
 use crate::internal_prelude::*;
-use crate::VfxPlugin;
 
 pub fn setup_vfx_assets(
-    plugin_config: Res<VfxPlugin>,
+    plugin_config: Res<HirundoPlugin>,
     asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<VfxMaterial>>,
@@ -34,7 +34,7 @@ pub fn setup_vfx_assets(
 
 /// Setup system for broadcast material (add to PreStartup)
 pub fn setup_broadcast_material(
-    plugin_config: Res<VfxPlugin>,
+    plugin_config: Res<HirundoPlugin>,
     asset_server: Res<AssetServer>,
     mut materials: ResMut<Assets<VfxBroadcastMaterial>>,
     mut commands: Commands,

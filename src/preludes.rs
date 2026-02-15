@@ -1,13 +1,10 @@
 // Internal prelude for use within the crate
 pub mod internal {
     pub use crate::components::*;
-    pub use crate::resources::*;
-    pub use crate::materials::*;
     pub use crate::effects::*;
+    pub use crate::materials::*;
+    pub use crate::resources::*;
     pub use crate::systems::*;
-    pub use crate::input::*;
-    pub use crate::spawners::*;
-    pub use crate::hooks::*;
 
     pub use bevy::{
         color::ColorToComponents,
@@ -36,14 +33,29 @@ pub mod internal {
     pub const MAX_VFX_ENTITIES: usize = 500;
 }
 
-// User-facing prelude
+// User-facing prelude - minimal API surface
 pub mod user {
-    pub use crate::VfxPlugin;
-    pub use crate::components::{Vfx, VfxBundle, VfxBroadcast};
-    pub use crate::materials::*;
-    pub use crate::effects::*;
-    pub use crate::resources::{AtlasDimensions, VfxBroadcastMaterialHandle, VfxMeshHandle};
-    pub use crate::systems::{setup_broadcast_material, update_broadcast_effect_stack, spawn_camera, control_2d_camera};
+    // Plugin
+    pub use crate::HirundoPlugin;
+
+    // Core components
+    pub use crate::components::{Vfx, VfxBroadcast, VfxBundle};
+
+    // Effects API (builders, modifiers, enums)
+    pub use crate::effects::{
+        AlphaEffect, Anchor, BlendMode, ColorEffect, CompositeMode, Effect, EffectBuilder,
+        EffectModifier, EffectStack, Envelope, Lifetime, Phase, SpatialEffect, Wave, WaveKind,
+    };
+
+    // Resources (only what users might need to access)
+    pub use crate::resources::{AtlasDimensions, VfxBroadcastMaterialHandle};
+
+    // Optional: Broadcast update system (if users want manual control)
+    pub use crate::systems::update_broadcast_effect_stack;
+
+    // Optional: Demo input systems (for testing/examples)
     pub use crate::input::{control_broadcast_fx, play_fx};
+
+    // Spawner helpers (convenience functions)
     pub use crate::spawners::*;
 }
