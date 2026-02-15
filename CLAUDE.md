@@ -15,6 +15,9 @@ cargo run
 # Build for release
 cargo run --release
 
+# Run tests
+cargo test
+
 # Clean build artifacts
 cargo clean
 ```
@@ -28,7 +31,7 @@ cargo clean
 The VFX system implements two rendering approaches optimized for different use cases:
 
 #### 1. Per-Entity VFX (Storage Buffer)
-- **File**: `src/render.rs`, `assets/shaders/vfx.wgsl`
+- **Files**: `src/materials/vfx_material.rs`, `assets/shaders/vfx.wgsl`
 - Uses GPU storage buffer indexed by `MeshTag` (unique ID per entity)
 - Supports up to `MAX_VFX_ENTITIES` (500) independent entities
 - Each entity can have its own sprite and effects
@@ -36,7 +39,7 @@ The VFX system implements two rendering approaches optimized for different use c
 - **Performance**: Good for 100-500 entities with individual effects
 
 #### 2. Broadcast VFX (Uniform)
-- **File**: `src/broadcast_material.rs`, `assets/shaders/vfx_broadcast.wgsl`
+- **Files**: `src/materials/broadcast_material.rs`, `assets/shaders/vfx_broadcast.wgsl`
 - Uses a single shared `EffectStack` uniform across all entities
 - All entities share the same effects but can have different sprites
 - Component: `VfxBroadcast` marker
@@ -46,13 +49,13 @@ The VFX system implements two rendering approaches optimized for different use c
 
 **Effect Stack**: Each entity (or broadcast material) has an `EffectStack` containing up to 6 simultaneous `Effect`s.
 
-**Effect Structure**:
+**Effect Structure** (`src/effects/effect_stack.rs`):
 - `Lifetime`: Controls timing (one-shot or looping)
 - Up to 3 `ColorEffect`s: RGB manipulation with blend modes (Lerp, Add, Multiply, Screen, HSV)
 - 1 `AlphaEffect`: Transparency control
 - Up to 3 `SpatialEffect`s: Vertex transformations (offset, scale, rotation, skew)
 
-**Wave System**: Each sub-effect is driven by a `Wave`:
+**Wave System** (`src/effects/wave.rs`): Each sub-effect is driven by a `Wave`:
 - Types: Sine, Square, Triangle, Saw, Constant
 - Parameters: frequency, amplitude, bias, phase
 - Envelopes: Attack-Hold-Release modulation for both amplitude and frequency
@@ -70,21 +73,57 @@ src/
 ├── lib.rs              # VfxPlugin definition and plugin configuration
 ├── main.rs             # Demo application with keyboard controls
 ├── preludes.rs         # Module re-exports (internal vs user-facing)
-├── vfx.rs              # Core effect types (Wave, Envelope, Effect, EffectBuilder)
-├── render.rs           # Per-entity VFX system (Vfx component, MeshTag allocation)
-├── broadcast_material.rs  # Broadcast VFX material and systems
-├── systems.rs          # ECS systems for effect synchronization and updates
-└── camera.rs           # 2D camera with pan (WASD) and zoom (Z/X) controls
-
-assets/
-└── shaders/
-    ├── vfx.wgsl           # Storage buffer shader (per-entity)
-    └── vfx_broadcast.wgsl # Uniform shader (broadcast)
+│
+├── effects/            # Effect System (Core VFX Logic)
+│   ├── lifetime.rs     # Effect lifetime and looping
+│   ├── phase.rs        # Sub-effect timing windows
+│   ├── wave.rs         # Wave oscillation (sine, square, etc.) + envelopes
+│   ├── envelope.rs     # Attack-Hold-Release envelopes
+│   ├── spatial.rs      # Spatial transforms (offset, scale, rotate, skew)
+│   ├── color.rs        # Color effects with blend modes
+│   ├── alpha.rs        # Alpha/transparency effects
+│   ├── effect_stack.rs # Effect and EffectStack structures
+│   └── builder.rs      # EffectBuilder and EffectModifier trait
+│
+├── components/         # ECS Components
+│   ├── vfx.rs          # Main Vfx component with lifecycle hooks
+│   ├── sprite_index.rs # Sprite index tracking
+│   └── markers.rs      # VfxBroadcast, VfxGhostBuffer markers
+│
+├── resources/          # ECS Resources
+│   ├── mesh_tag_allocator.rs # Tag allocation and recycling system
+│   ├── effect_storage.rs     # GPU buffer storage for effects
+│   ├── material_handles.rs   # Material resource handles
+│   └── atlas_config.rs       # Texture atlas configuration
+│
+├── materials/          # Bevy 2D Materials
+│   ├── vfx_material.rs       # Standard per-entity VFX material
+│   └── broadcast_material.rs # Shared broadcast material
+│
+├── systems/            # ECS Systems
+│   ├── sync.rs         # Sync Vfx to internal components
+│   ├── storage.rs      # Update GPU storage buffers
+│   ├── pruning.rs      # Prune expired effects
+│   ├── setup.rs        # Asset setup systems
+│   ├── broadcast_update.rs # Broadcast material updates
+│   └── camera.rs       # Camera spawning and controls
+│
+├── hooks/              # Component Lifecycle Hooks
+│   ├── hydrate.rs      # Component addition hook
+│   └── dehydrate.rs    # Component removal hook
+│
+├── input/              # Input Handling
+│   ├── vfx_controls.rs       # Standard VFX keyboard controls
+│   └── broadcast_controls.rs # Broadcast effect keyboard controls
+│
+└── spawners/           # Entity Spawning Helpers
+    ├── vfx_spawner.rs        # VFX entity spawning functions
+    └── broadcast_spawner.rs  # Broadcast entity spawning functions
 ```
 
 ### Key Design Patterns
 
-**Component Lifecycle Hooks**:
+**Component Lifecycle Hooks** (`src/hooks/`):
 - `Vfx` component uses `on_add` and `on_remove` hooks for automatic resource management
 - Allocates `MeshTag` on spawn, recycles on despawn
 - Marks GPU buffer slots as dirty for efficient updates
@@ -94,11 +133,11 @@ assets/
 - GPU buffer only updated for changed entities (via `dirty_slots`)
 - Hooks and `Changed<Vfx>` queries both mark slots dirty
 
-**Prelude Pattern**:
+**Prelude Pattern** (`src/preludes.rs`):
 - `internal_prelude`: Full access for internal modules
 - `prelude` (user-facing): Exports `Vfx`, `VfxPlugin`, effect builders, and modifiers
 
-**Builder Pattern**:
+**Builder Pattern** (`src/effects/builder.rs`):
 - `EffectBuilder` provides fluent API for creating effects
 - `.with()` method accepts `EffectModifier` traits to modify the most recent sub-effect
 - Spatial effects initialize with `Wave::constant()` (static transform)
@@ -164,12 +203,6 @@ Both shaders (`vfx.wgsl` and `vfx_broadcast.wgsl`) share nearly identical struct
 - `vfx_broadcast.wgsl`: Reads single `EffectStack` from uniform (same for all instances)
 
 When modifying effect struct layouts, update:
-1. Rust types (`src/vfx.rs`) with `#[repr(C)]` and `ShaderType` derive
+1. Rust types (`src/effects/`) with `#[repr(C)]` and `ShaderType` derive
 2. WGSL structs in both shader files (must match Rust layout exactly)
 3. Constants if adding slots to effect arrays
-
-## Current Branch Context
-
-Branch: `common_shader`
-
-Recent work appears focused on consolidating shader code between the two rendering approaches. The broadcast system provides an efficient alternative for mass-synchronized effects.

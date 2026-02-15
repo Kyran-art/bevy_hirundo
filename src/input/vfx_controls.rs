@@ -39,9 +39,17 @@ pub fn play_fx(
             );
         }
     } else if input.just_pressed(KeyCode::KeyI) {
+        info!("KeyI - Randomizing sprite index for all Vfx entities.");
         let mut rng = rand::rng();
         for mut vfx in &mut query {
             vfx.sprite_index = rng.random_range(0..625);
+        }
+    } else if input.just_pressed(KeyCode::KeyT) {
+        info!("KeyT - Setting all Vfx entities to the same random sprite index.");
+        let mut rng = rand::rng();
+        let rand_sprite = rng.random_range(0..625);
+        for mut vfx in &mut query {
+            vfx.sprite_index = rand_sprite
         }
     } else if input.just_pressed(KeyCode::KeyU) {
         let mut rng = rand::rng();
