@@ -1138,6 +1138,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_hirundo"
+version = "0.1.0"
+dependencies = [
+ "bevy 0.18.0",
+ "bevy_ecs_tilemap",
+ "bracket-lib",
+ "bytemuck",
+ "derive_more",
+ "enum-map",
+ "glam",
+ "rand 0.9.2",
+]
+
+[[package]]
 name = "bevy_image"
 version = "0.17.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4542,20 +4556,6 @@ checksum = "0fbdd3d7436f8b5e892b8b7ea114271ff0fa00bc5acae845d53b07d498616ef6"
 dependencies = [
  "num-traits",
  "pxfm",
-]
-
-[[package]]
-name = "my_bevy_game"
-version = "0.1.0"
-dependencies = [
- "bevy 0.18.0",
- "bevy_ecs_tilemap",
- "bracket-lib",
- "bytemuck",
- "derive_more",
- "enum-map",
- "glam",
- "rand 0.9.2",
 ]
 
 [[package]]

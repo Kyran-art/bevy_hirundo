@@ -16,13 +16,12 @@ pub fn play_fx(
                 rng.random_range(0.0..1.0),
                 rng.random_range(0.0..1.0),
             );
-            vfx.push_effect(
-                EffectBuilder::looping(time.elapsed_secs(), 1.0)
-                    .color(random_color)
-                    .with(Wave::sine(1.0, -0.5, 0.5))
-                    .with(BlendMode::Add)
-                    .build(),
-            );
+            let pulse_effect = EffectBuilder::looping(time.elapsed_secs(), 1.0)
+                .color(random_color)
+                .with(Wave::sine(1.0, -0.5, 0.5))
+                .with(BlendMode::Multiply)
+                .build();
+            vfx.push_effect(pulse_effect);
         }
     } else if input.just_pressed(KeyCode::KeyO) {
         let mut rng = rand::rng();

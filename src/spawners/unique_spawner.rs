@@ -1,6 +1,6 @@
 use crate::internal_prelude::*;
 
-pub fn spawn_vfx_entities(mut commands: Commands) {
+pub fn spawn_unique_entities(mut commands: Commands) {
     const COUNT: usize = 500;
     const SPACING: f32 = 50.0;
 

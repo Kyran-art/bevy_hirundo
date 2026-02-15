@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Bevy 0.18 game project featuring a custom VFX (Visual Effects) system for 2D sprite animations. The core system provides GPU-accelerated, wave-driven visual effects that can be applied to thousands of sprites simultaneously with minimal performance overhead.
+**Hirundo** (bevy_hirundo) is a Bevy 0.18 VFX (Visual Effects) library for 2D sprite animations. Named after the genus of swallows, Hirundo provides GPU-accelerated, wave-driven visual effects that can be applied to thousands of sprites simultaneously with minimal performance overhead.
 
 ## Build & Run Commands
 
 ```bash
-# Run the main application (20,000 broadcast VFX entities demo)
+# Run the main application (500 unique VFX entities demo)
 cargo run
 
 # Build for release
@@ -113,11 +113,11 @@ src/
 │   └── dehydrate.rs    # Component removal hook
 │
 ├── input/              # Input Handling
-│   ├── vfx_controls.rs       # Standard VFX keyboard controls
+│   ├── unique_controls.rs    # Per-entity (unique) VFX keyboard controls
 │   └── broadcast_controls.rs # Broadcast effect keyboard controls
 │
 └── spawners/           # Entity Spawning Helpers
-    ├── vfx_spawner.rs        # VFX entity spawning functions
+    ├── unique_spawner.rs     # Per-entity VFX spawning functions
     └── broadcast_spawner.rs  # Broadcast entity spawning functions
 ```
 

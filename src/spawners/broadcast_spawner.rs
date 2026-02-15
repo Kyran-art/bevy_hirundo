@@ -1,7 +1,7 @@
 use crate::internal_prelude::*;
 
 /// Helper to spawn a broadcast VFX entity
-pub fn spawn_broadcast_vfx(
+pub fn spawn_broadcast_entity(
     commands: &mut Commands,
     mesh_handle: &Handle<Mesh>,
     material_handle: &Handle<VfxBroadcastMaterial>,
