@@ -119,7 +119,10 @@ pub fn play_fx(
             let y = start_y + (row as f32) * SPACING;
             let sprite_index = rng.random_range(0..625);
 
-            commands.spawn((Transform::from_xyz(x, y, 0.0), Vfx::new(sprite_index)));
+            commands.spawn((
+                Transform::from_xyz(x, y, 0.0),
+                Vfx::with_sprite(sprite_index),
+            ));
         }
     }
 }

@@ -28,7 +28,7 @@ pub struct Vfx {
 }
 
 impl Vfx {
-    pub fn new(sprite_index: u32) -> Self {
+    pub fn with_sprite(sprite_index: u32) -> Self {
         Vfx {
             sprite_index,
             effects: EffectStack::default(),
@@ -46,7 +46,7 @@ impl Vfx {
 
 impl Default for Vfx {
     fn default() -> Self {
-        Self::new(0)
+        Self::with_sprite(0)
     }
 }
 

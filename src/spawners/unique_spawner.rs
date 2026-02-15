@@ -23,7 +23,7 @@ pub fn spawn_unique_entities(mut commands: Commands) {
         let y = start_y + (row as f32) * SPACING;
         commands.spawn((
             Transform::from_xyz(x, y, 0.0),
-            Vfx::new(random_sprite_index),
+            Vfx::with_sprite(random_sprite_index),
         ));
     }
 }
