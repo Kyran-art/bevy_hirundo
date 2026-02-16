@@ -16,7 +16,7 @@ pub fn play_fx(
                 rng.random_range(0.0..1.0),
                 rng.random_range(0.0..1.0),
             );
-            let pulse_effect = EffectBuilder::looping(time.elapsed_secs(), 1.0)
+            let pulse_effect = EffectBuilder::one_shot(time.elapsed_secs(), 1.0)
                 .color(random_color)
                 .with(Wave::sine(1.0, -0.5, 0.5))
                 .with(BlendMode::Multiply)

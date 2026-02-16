@@ -1,7 +1,7 @@
 use crate::internal_prelude::*;
 
 pub fn spawn_unique_entities(mut commands: Commands) {
-    const COUNT: usize = 500;
+    const COUNT: usize = 1;
     const SPACING: f32 = 50.0;
 
     // Grid dims (near-square) calculation
