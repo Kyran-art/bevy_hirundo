@@ -5,6 +5,7 @@ pub fn control_broadcast_fx(
     time: Res<Time>,
     input: Res<ButtonInput<KeyCode>>,
     broadcast_mat_handle: Res<VfxBroadcastMaterialHandle>,
+    mut sprite_query: Query<&mut SpriteIndex>,
     mut materials: ResMut<Assets<VfxBroadcastMaterial>>,
 ) {
     let Some(material) = materials.get_mut(&broadcast_mat_handle.0) else {
@@ -39,9 +40,15 @@ pub fn control_broadcast_fx(
                 .with(Wave::sine(1.0, random_squash, -random_squash))
                 .build(),
         );
-    } else if input.just_pressed(KeyCode::KeyI) {
-        info!("I - Changing sprite for ALL entities");
+    } else if input.just_pressed(KeyCode::KeyT) {
+        info!("T - Changing sprite for ALL entities");
         material.effect_stack.tile_index = rand::rng().random_range(0..625);
+    } else if input.just_pressed(KeyCode::KeyI) {
+        info!("I - Randomizing sprite of all Vfx entities.");
+        let mut rng = rand::rng();
+        for mut sprite in &mut sprite_query {
+            sprite.0 = rng.random_range(0..625);
+        }
     } else if input.just_pressed(KeyCode::KeyU) {
         info!("U - Adding rotation effect to ALL entities");
         let rotations: [f32; 3] = [360.0, 720.0, 1080.0];

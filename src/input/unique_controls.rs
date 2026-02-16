@@ -1,7 +1,7 @@
 use crate::internal_prelude::*;
 
 /// Key-based testing for effects
-pub fn play_fx(
+pub fn control_unique_fx(
     mut commands: Commands,
     time: Res<Time>,
     input: Res<ButtonInput<KeyCode>>,

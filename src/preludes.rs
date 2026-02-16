@@ -54,7 +54,7 @@ pub mod user {
     pub use crate::systems::update_broadcast_effect_stack;
 
     // Optional: Demo input systems (for testing/examples)
-    pub use crate::input::{control_broadcast_fx, play_fx};
+    pub use crate::input::{control_broadcast_fx, control_unique_fx};
 
     // Spawner helpers (convenience functions)
     pub use crate::spawners::*;

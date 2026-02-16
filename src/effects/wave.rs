@@ -1,6 +1,6 @@
-use crate::internal_prelude::*;
-use super::envelope::Envelope;
 use super::builder::{EffectBuilder, EffectModifier, LastEffect};
+use super::envelope::Envelope;
+use crate::internal_prelude::*;
 
 /// The **Constant** wave is the default for most [`EffectBuilder`] sub-effects.
 ///
