@@ -74,7 +74,11 @@ if input.just_pressed(KeyCode::KeyP) {
 # Performance
 Testing on an Iris-Xe integrated GPU, 500 entities with unique effects existed simultaneously, with reasonable and stable framerate.
 
+https://github.com/user-attachments/assets/14b6de0b-a10d-4f7a-8fc9-f4cef927c039
+
 Broadcasted effects are much more scalable, handling 20,000 entities easily.
+
+https://github.com/user-attachments/assets/8a6f46da-629a-47ce-b9ed-f8b2e8eda7d7
 
 Hirundo uses separate shader paths and materials for unique and broadcasted effects respectively, to avoid per-entity uniform pressure at scale.
 
